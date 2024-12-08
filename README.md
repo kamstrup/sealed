@@ -7,18 +7,19 @@ In other languages this is also known as constant, read-only, persistent, final,
 ## Usage
 ```go
 import (
+	"cmp"
+	"fmt"
 	"github.com/kamstrup/sealed"
 )
 
-// First prepare a sealed.Builder with set of strings
-sb := sealed.NewBuilder[string](0, 10) // allocate builder with len=0, cap=10
-sb.Append("hello", "world"). // var args
-  Collect(seq). // Go 1.23 iterators
-  Sort(cmp.Compare[string])
+// Sealed slices are created via a fluent API based on sealed.Builder
+s := sealed.NewBuilder[string](0, 10). // allocate builder with len=0, cap=10
+  Append("hello", "world"). // var args
+  Collect(seq). // Append a Go 1.23 iterator
+  Sort(cmp.Compare[string]).
+  Seal() // converts the builder into a sealed.Slice[string]
 
-// Create an immutable slice of strings from the builder
-s := sb.Seal() // converts the builder into a sealed.Slice[string]
-
+// Print the elements in the slice
 for _, str := range s.All {
 	fmt.Println(str)
 }
@@ -30,8 +31,8 @@ Sealed has grown out of the need for having `const` slices and maps. After writi
 in particular in big projects with varying team members, it has become clear to me that maps and slices
 are not well suited for public APIs in Go. Neither as parameters nor return values.
 
-Slices and maps seem so simple and easy to use, but there are many subtle pitfalls around ownership
-and life cycle that they extremely hard to correctly everywhere in the long run.
+Slices and maps seem so simple and easy to use, but there are so many subtle pitfalls around ownership
+and life cycle, making them extremely hard to use correctly everywhere in the long run.
 
 Consider a simple function
 ```go
