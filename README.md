@@ -2,7 +2,8 @@
 
 Package `sealed` is a small library implementing immutable slices and maps for Golang.
 
-In other languages this is also known as constant, read-only, persistent, final, or frozen slices and maps.
+In other languages this is also known as constant vectors, read-only collections, persistent data-structures,
+final instances, or frozen lists and hash maps.
 
 ## Usage
 ```go
@@ -40,7 +41,7 @@ func (udb *UserDatabase) AddUsers(users []User) error {
 	// do stuff with users
 }
 ```
-If `AddUsers` wants to hold on to the `users` slice it *must* copy it.
+If the `UserDatabase` wants to hold on to the `users` slice after `AddUsers` returns, it *must* copy it.
 On a small team it might, for example, be possible to agree (and document) that AddUsers steals
 the users slice, for performance reasons, and callers should take heed and never use the `users`
 slice again after the call.
@@ -58,13 +59,14 @@ The developer team must agree through docs and conventions that _no one ever cha
 from Users()_! Given time, complexity, and changing team members, this assumption will inevitably break.
 The only recourse is to **always copy the returned slice**.
 
-To put it short: If you want to be absolutely safe about the integrity of your slices you **must**
-copy them every time they cross an API boundary! If you are dealing with performance sensitive software,
-this can be a severe restriction.
+To put it short: If you want to be absolutely safe about the integrity of your slices you **must
+copy them every time they cross an API boundary!** The same thing goes for maps.
+If you are dealing with performance sensitive software, this can be a severe restriction.
 
 In an ideal world where "constness" could be enforced by the Go compiler, AddUsers() would look something
 like the following
 ```go
+// not valid Go
 func (udb *UserDatabase) AddUsers(users const [] const User) error {
 	// do stuff with users
 }

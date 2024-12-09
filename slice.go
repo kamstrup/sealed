@@ -1,7 +1,14 @@
 package sealed
 
+// TODO
+// Slice.Index(func) int
+// Slice.Contains(func) bool
+// Slice.Slice(start, end int) Slice[T]
+// PopFirst, PopLast
+
 // Slice is an immutable representation of a standard Go slice.
 // Use Builder.Seal to create a new slice.
+// The zero-value of Slice is a valid representation of an empty slice.
 type Slice[T any] struct {
 	s []T
 }
