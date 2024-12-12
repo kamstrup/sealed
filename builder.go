@@ -32,11 +32,27 @@ func (b *Builder[T]) Append(elem ...T) *Builder[T] {
 	return b
 }
 
-// Collect appends all values from seq and returns the builder.
+func (b *Builder[T]) AppendSlice(other Slice[T]) *Builder[T] {
+	b.s = append(b.s, other.s...)
+	return b
+}
+
+// AppendSeq appends all values from an iter.Seq and returns the builder.
 //
-// If you know the number of elements in the iter it is usually worthwhile calling Grow before calling Collect,
+// If you know the number of elements in the seq it is usually worthwhile calling Grow before calling AppendSeq2,
 // or ensure that the builder is created with enough initial capacity when calling NewBuilder.
-func (b *Builder[T]) Collect(seq iter.Seq2[int, T]) *Builder[T] {
+func (b *Builder[T]) AppendSeq(seq iter.Seq[T]) *Builder[T] {
+	for t := range seq {
+		b.s = append(b.s, t)
+	}
+	return b
+}
+
+// AppendSeq2 appends all values from an iter.Seq2 and returns the builder.
+//
+// If you know the number of elements in the seq it is usually worthwhile calling Grow before calling AppendSeq2,
+// or ensure that the builder is created with enough initial capacity when calling NewBuilder.
+func (b *Builder[T]) AppendSeq2(seq iter.Seq2[int, T]) *Builder[T] {
 	for _, elem := range seq {
 		b.s = append(b.s, elem)
 	}

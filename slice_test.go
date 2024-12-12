@@ -11,7 +11,7 @@ import (
 func TestSlice(t *testing.T) {
 	b := sealed.Builder[int]{}
 	b.Append(2, 1, 3).
-		Collect(slices.All([]int{6, 5, 4})).
+		AppendSeq2(slices.All([]int{6, 5, 4})).
 		Sort(cmp.Compare[int])
 
 	if b.Len() != 6 {

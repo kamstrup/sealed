@@ -25,6 +25,11 @@ func (m *Mapper[K, V]) Copy(src map[K]V) *Mapper[K, V] {
 	return m
 }
 
+func (m *Mapper[K, V]) CopyMap(other Map[K, V]) *Mapper[K, V] {
+	maps.Copy(m.m, other.m)
+	return m
+}
+
 func (m *Mapper[K, V]) Collect(seq iter.Seq2[K, V]) *Mapper[K, V] {
 	for k, v := range seq {
 		m.m[k] = v
